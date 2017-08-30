@@ -1,0 +1,17 @@
+database:
+  driverClass: org.h2.Driver
+  user: sa
+  password: sa
+  url: jdbc:h2:./target/example
+server:
+  applicationConnectors:
+  - type: http 
+    port: 9000
+  adminConnectors:
+  - type: http
+    port: 9001
+maxLength: 100
+logging:
+  level: INFO
+  loggers:
+    org.beerbytes: DEBUG
