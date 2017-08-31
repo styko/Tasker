@@ -55,26 +55,28 @@ public class TaskListResource {
 	@Path("/task")
 	@Timed
 	@UnitOfWork
-	public Task getTask(@QueryParam("id") Optional<Long> id) {
+	public Task getTask(@QueryParam("id") Optional<Long> id, @AuthRequired User user) {
 		log.info("getTask was runned");
-		return taskDAO.findById(id.orElseThrow(()-> new NotFoundException("id was not entered")));
+		
+		return taskDAO.findByIdAndUserId(id.orElseThrow(()-> new NotFoundException("id was not entered")), user);
 	}
 	
 	@DELETE
 	@Path("/task")
 	@Timed
 	@UnitOfWork
-	public Response deleteTask(@QueryParam("id") Optional<Long> optinalId) {
+	public Response deleteTask(@QueryParam("id") Optional<Long> optinalId, @AuthRequired User user) {
 		log.info("delete-task was runned");
 		Long id = optinalId.orElseThrow(()-> new NotFoundException("id was not entered"));
-		taskDAO.deleteById(id);
+		taskDAO.deleteByIdAndUserId(id, user);
 		return Response.status(Status.ACCEPTED).entity("deleted-task with id="+id).build();
 	}
 	
 	@PUT
 	@Path("/task")
 	@UnitOfWork
-	public Response createOrUpdateTask(Task task) throws URISyntaxException {
+	public Response createOrUpdateTask(Task task, @AuthRequired User user) throws URISyntaxException {
+		task.setUser(user);
 		Set<ConstraintViolation<Task>> violations = validator.validate(task);
 
 		if (violations.size() > 0) {

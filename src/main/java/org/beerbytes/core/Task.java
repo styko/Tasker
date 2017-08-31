@@ -26,7 +26,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "task")
 @NamedQueries({
 	@NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t"), 
-	@NamedQuery(name = "Task.findAllbyUserId", query = "SELECT t FROM Task t where user.id = :id") 
+	@NamedQuery(name = "Task.findAllbyUserId", query = "SELECT t FROM Task t where user.id = :id"),
+	@NamedQuery(name = "Task.findByIdAndUserId", query = "SELECT t FROM Task t where t.id= :id and user.id = :userid")
 })
 public class Task {
 	@NotNull
@@ -66,6 +67,15 @@ public class Task {
 		this.begin = begin;
 		this.end = end;
 		this.slackTime = slackTime;
+		this.user = user;
+	}
+	
+	@JsonProperty
+	public User getUser() {
+		return user;
+	}
+	
+	public void setUser(User user) {
 		this.user = user;
 	}
 
