@@ -42,4 +42,7 @@ http://localhost:9000/task-list/delete-task?id=1
 
 http://localhost:9000/task-list/task?id=4
 
+How to start appliaction in exploded state/debug in Eclipse
+---
+Right click TaskerApplication.Java and run Run as Java Application/ Debug as Java application
 
