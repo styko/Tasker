@@ -88,13 +88,11 @@
 				<input class="button expanded"  value="Logout" v-on:click="logout">
 			</form>
 
-
 			<div v-if="jwtToken.length != 0">
-
-				<input class="button" id="show-modal" @click="showModalNewTask = true" value="Add" />
-				<!-- use the modal component, pass in the prop -->
+				<input class="button" id="show-modal" @click="openModal" value="Add" />
 				<modal v-if="showModalNewTask">
-					<h3 slot="header">Create new task</h3>
+					<h3 slot="header" v-if="task.id == null">Create new task</h3>
+					<h3 slot="header" v-else>Edit task</h3>
 					<table slot="body">
 						<tr>
 							<td width="200">Info</td>
@@ -124,7 +122,7 @@
 					<button slot="footer" class="button" @click="save">
 						Save
 					</button>	
-					<button slot="footer" class="button" @click="showModalNewTask = false">
+					<button slot="footer" class="button" @click="close">
 						Close
 					</button>	
 				</modal>
@@ -146,7 +144,8 @@
 							<td>{{ task.end }}</td>
 							<td>{{ task.slackTime }}</td>
 							<td>
-									<button class="button" @click="removeTask(task.id)">Remove</button>
+								<button class="button" @click="removeTask(task.id)">Remove</button>
+								<button class="button" @click="editTask(task)">Edit</button>
 							</td>
 						</tr>
 					</tbody>
@@ -159,23 +158,15 @@
 						<div class="modal-wrapper">
 							<div class="modal-container">
 								<div class="modal-header">
-									<slot name="header">
-										default header
-									</slot>
+									<slot name="header"></slot>
 								</div>
 
 								<div class="modal-body">
-									<slot name="body">
-										default body
-									</slot>
+									<slot name="body"></slot>
 								</div>
 
 								<div class="modal-footer">
-									<slot name="footer">
-										<button class="button" @click="$emit('close')">
-											OK
-										</button>
-									</slot>
+									<slot name="footer"></slot>
 								</div>
 							</div>
 						</div>
@@ -184,7 +175,8 @@
 		</script>
 
     <script src="https://unpkg.com/vue"></script>
-		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/moment"></script>
     <script>
 			Vue.component('modal', {
 				template: '#modal-template'
@@ -198,21 +190,37 @@
 							password:'123',
 							tasks: [],
 							showModalNewTask: false,
-							task: {"info":"","begin":new Date(),"end":new Date(),"slackTime":"00:00:00"}
+							task: {}
 					  },
 						mounted() {
 							
 						},
 						methods: {
+							newTask(){
+								this.task.id = null;
+								this.task.info = "";
+								this.task.begin = new Date();
+								this.task.end = new Date();
+								this.task.slackTime = "00:00:00";
+							},
+							openModal(){
+								this.newTask();
+								this.showModalNewTask = true;
+							},
 							save(){
 								this.showModalNewTask = false;
 								this.addTask();
 							},
+							close(){
+								this.getAllTasks();
+								this.showModalNewTask = false;
+							},
 							addTask(){
 								axios.put("http://localhost:9000/task-list/task", {
+									id:(this.task.id != null ? this.task.id.toString() : null),
 									info:this.task.info,
-									begin:this.task.begin,
-									end:this.task.end,
+									begin:moment(this.task.begin).format(),
+									end:moment(this.task.end).format(),
 									slackTime:this.task.slackTime
 								})
 								.then(response => {
@@ -223,6 +231,10 @@
 									console.log(error);
 									alert(error);
 								});
+							},
+							editTask(currentTask){
+								this.task = currentTask;
+								this.showModalNewTask = true;
 							},
 							removeTask(id){
 								axios.delete("http://localhost:9000/task-list/task?id=" + id)
