@@ -17,3 +17,6 @@ logging:
   level: INFO
   loggers:
     org.beerbytes: DEBUG
+assets:
+  overrides:
+    /gui: src/main/resources/assets/

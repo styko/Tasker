@@ -14,6 +14,7 @@ import org.beerbytes.resources.AuthResource;
 import org.beerbytes.resources.TaskListResource;
 
 import io.dropwizard.Application;
+import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
@@ -50,6 +51,7 @@ public class TaskerApplication extends Application<TaskerConfiguration> {
 			}
 		});
 		bootstrap.addBundle(hibernateBundle);
+		bootstrap.addBundle(new ConfiguredAssetsBundle("/assets/", "/gui"));
 	}
 
 	@Override
