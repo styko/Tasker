@@ -81,15 +81,14 @@
 					<label for="pass">Password</label>
 					<input type="password"  name="password input" placeholder="Password" v-model="password">
 				</div>
-				<input class="button expanded"  value="Login" v-on:click="login">
+				<input class="button"  value="Login" v-on:click="login">
 			</form>
 
 			<form class="callout text-left" v-if="jwtToken.length != 0">
-				<input class="button expanded"  value="Logout" v-on:click="logout">
+				<input class="button"  value="Logout" v-on:click="logout">
 			</form>
 
 			<div v-if="jwtToken.length != 0">
-				<input class="button" id="show-modal" @click="openModal" value="Add" />
 				<modal v-if="showModalNewTask">
 					<h3 slot="header" v-if="task.id == null">Create new task</h3>
 					<h3 slot="header" v-else>Edit task</h3>
@@ -146,6 +145,15 @@
 							<td>
 								<button class="button" @click="removeTask(task.id)">Remove</button>
 								<button class="button" @click="editTask(task)">Edit</button>
+							</td>
+						</tr>
+						<tr class="table-expand-row">
+							<td><button class="button" @click="openModal">Add</button></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								
 							</td>
 						</tr>
 					</tbody>
