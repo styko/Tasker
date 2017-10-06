@@ -26,5 +26,7 @@ TODO
 Usefull links
 ---
 [Example requests and response in CURL format](examplerequest_response.md)
+
 http://jarbytes.com/jwt-on-dropwizard.html
+
 http://jonatan.nilsson.is/stateless-tokens-with-jwt/
