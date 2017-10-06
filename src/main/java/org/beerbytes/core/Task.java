@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 //TODO replace Date with LocalDateTime and Time with LocalTime
@@ -52,6 +53,7 @@ public class Task {
 	@Column(nullable = false)
 	private Time slackTime;
 	
+	@JsonIgnore
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -70,7 +72,6 @@ public class Task {
 		this.user = user;
 	}
 	
-	@JsonProperty
 	public User getUser() {
 		return user;
 	}

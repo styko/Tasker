@@ -65,6 +65,10 @@
 				-webkit-transform: scale(1.1);
 				transform: scale(1.1);
 			}
+
+			.modal-button {
+				margin-right:5px;
+			}
 		</style>
   </head>
   <body>
@@ -108,7 +112,7 @@
 						<tr>
 							<td width="200">End</td>
 							<td width="200">
-								<input v-model="task.end"/>
+								<input v-model="task.end "/>
 							</td> 
 						</tr>
 						<tr>
@@ -118,10 +122,10 @@
 							</td> 
 						</tr>
 					</table>	
-					<button slot="footer" class="button" @click="save">
+					<button slot="footer" class="button modal-button" @click="save">
 						Save
 					</button>	
-					<button slot="footer" class="button" @click="close">
+					<button slot="footer" class="button modal-button" @click="close">
 						Close
 					</button>	
 				</modal>
@@ -139,8 +143,8 @@
 					<tbody>
 						<tr class="table-expand-row" v-for="task in tasks">
 							<td>{{ task.info }}</td>
-							<td>{{ task.begin }}</td>
-							<td>{{ task.end }}</td>
+							<td>{{ task.begin | formatDate }}</td>
+							<td>{{ task.end | formatDate }}</td>
 							<td>{{ task.slackTime }}</td>
 							<td>
 								<button class="button" @click="removeTask(task.id)">Remove</button>
@@ -203,12 +207,17 @@
 						mounted() {
 							
 						},
+						filters: {
+							formatDate: function (value) {
+								return moment(value).format("YYYY-MM-DD HH:mm");
+							}
+						},
 						methods: {
 							newTask(){
 								this.task.id = null;
 								this.task.info = "";
-								this.task.begin = new Date();
-								this.task.end = new Date();
+								this.task.begin = moment(new Date()).format("YYYY-MM-DD HH:mm");
+								this.task.end = moment(new Date()).format("YYYY-MM-DD HH:mm");
 								this.task.slackTime = "00:00:00";
 							},
 							openModal(){
